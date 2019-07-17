@@ -48,7 +48,7 @@ RUN wget -q https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/c
   && ./cmake-$CMAKE_VERSION-Linux-x86_64.sh --skip-license --prefix=/usr/local \
   && rm -f ./cmake-$CMAKE_VERSION-Linux-x86_64.sh
 
-ENV ZEPHYR_ZSDK_VERSION 0.10.1
+ENV ZEPHYR_ZSDK_VERSION 0.10.0
 RUN wget -nv https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v$ZEPHYR_ZSDK_VERSION/zephyr-sdk-$ZEPHYR_ZSDK_VERSION-setup.run \
   && sh zephyr-sdk-$ZEPHYR_ZSDK_VERSION-setup.run \
   && rm zephyr-sdk-$ZEPHYR_ZSDK_VERSION-setup.run
