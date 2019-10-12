@@ -5,6 +5,6 @@
 
 Docker image for Zephyr development with west.
 
-Similar to <https://github.com/zephyrproject-rtos/docker-image>, but
-using [West](https://docs.zephyrproject.org/latest/guides/west/index.html),
+Similar to Zephyr's [zephyrproject-rtos/docker-image](https://github.com/zephyrproject-rtos/docker-image),
+but using [West](https://docs.zephyrproject.org/latest/guides/west/index.html),
 and geared towards CI instead of local development.

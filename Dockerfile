@@ -56,12 +56,12 @@ ENV ZEPHYR_TOOLCHAIN_VARIANT zephyr
 ENV ZEPHYR_SDK_INSTALL_DIR /opt/zephyr-sdk
 
 RUN pip3 install --upgrade \
-	pip==19.1.1 \
+	pip==19.2.3 \
 	setuptools==41.0.1 \
 	wheel==0.33.4
 RUN pip3 install west==0.5.8
 
 RUN mkdir -p /usr/src/zephyrproject
 WORKDIR /usr/src/zephyrproject
-RUN west init --mr v1.14.1-rc1 && west update
+RUN west init --mr v1.14.1 && west update
 RUN pip3 install -r zephyr/scripts/requirements.txt
