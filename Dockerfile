@@ -63,5 +63,5 @@ RUN pip3 install west==0.5.8
 
 RUN mkdir -p /usr/src/zephyrproject
 WORKDIR /usr/src/zephyrproject
-RUN west init --mr v1.14.1 && west update
+RUN west init --mr v2.0.0 && west update
 RUN pip3 install -r zephyr/scripts/requirements.txt
