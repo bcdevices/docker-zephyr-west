@@ -42,13 +42,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		zip \
 	  && rm -rf /var/lib/apt/lists/*
 
-ENV CMAKE_VERSION 3.13.2
+ENV CMAKE_VERSION 3.13.3
 RUN wget -q https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-$CMAKE_VERSION-Linux-x86_64.sh \
   && chmod +x cmake-$CMAKE_VERSION-Linux-x86_64.sh \
   && ./cmake-$CMAKE_VERSION-Linux-x86_64.sh --skip-license --prefix=/usr/local \
   && rm -f ./cmake-$CMAKE_VERSION-Linux-x86_64.sh
 
-ENV ZEPHYR_ZSDK_VERSION 0.10.3
+ENV ZEPHYR_ZSDK_VERSION 0.11.1
 RUN wget -nv https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v$ZEPHYR_ZSDK_VERSION/zephyr-sdk-$ZEPHYR_ZSDK_VERSION-setup.run \
   && sh zephyr-sdk-$ZEPHYR_ZSDK_VERSION-setup.run \
   && rm zephyr-sdk-$ZEPHYR_ZSDK_VERSION-setup.run
@@ -63,5 +63,5 @@ RUN pip3 install west==0.6.3
 
 RUN mkdir -p /usr/src/zephyrproject
 WORKDIR /usr/src/zephyrproject
-RUN west init --mr v2.1.0 && west update
+RUN west init --mr v2.2.0-rc1 && west update
 RUN pip3 install -r zephyr/scripts/requirements.txt
