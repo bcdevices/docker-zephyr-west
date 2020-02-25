@@ -1,4 +1,4 @@
-FROM buildpack-deps:cosmic-scm
+FROM buildpack-deps:bionic-scm
 
 # Setup environment
 ENV DEBIAN_FRONTEND noninteractive
@@ -50,7 +50,7 @@ RUN wget -q https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/c
 
 ENV ZEPHYR_ZSDK_VERSION 0.11.1
 RUN wget -nv https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v$ZEPHYR_ZSDK_VERSION/zephyr-sdk-$ZEPHYR_ZSDK_VERSION-setup.run \
-  && sh zephyr-sdk-$ZEPHYR_ZSDK_VERSION-setup.run \
+  && sh zephyr-sdk-$ZEPHYR_ZSDK_VERSION-setup.run -- -d /opt/zephyr-sdk \
   && rm zephyr-sdk-$ZEPHYR_ZSDK_VERSION-setup.run
 ENV ZEPHYR_TOOLCHAIN_VARIANT zephyr
 ENV ZEPHYR_SDK_INSTALL_DIR /opt/zephyr-sdk
