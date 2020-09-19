@@ -25,13 +25,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		g++ \
 		gcc \
 		gcc-multilib \
+		g++-multilib \
 		git \
 		gperf \
 		lbzip2 \
 		libc6-dev \
+		libsdl-dev \
 		ninja-build \
 		make \
 		pkg-config \
+		python3-dev \
 		python3-pip \
 		python3-setuptools \
 		python3-tk \
@@ -48,20 +51,16 @@ RUN wget -q https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/c
   && ./cmake-$CMAKE_VERSION-Linux-x86_64.sh --skip-license --prefix=/usr/local \
   && rm -f ./cmake-$CMAKE_VERSION-Linux-x86_64.sh
 
-ENV ZEPHYR_ZSDK_VERSION 0.11.2
+ENV ZEPHYR_ZSDK_VERSION 0.11.3
 RUN wget -nv https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v$ZEPHYR_ZSDK_VERSION/zephyr-sdk-$ZEPHYR_ZSDK_VERSION-setup.run \
   && sh zephyr-sdk-$ZEPHYR_ZSDK_VERSION-setup.run -- -d /opt/zephyr-sdk \
   && rm zephyr-sdk-$ZEPHYR_ZSDK_VERSION-setup.run
 ENV ZEPHYR_TOOLCHAIN_VARIANT zephyr
 ENV ZEPHYR_SDK_INSTALL_DIR /opt/zephyr-sdk
 
-RUN pip3 install --upgrade \
-	pip==19.2.3 \
-	setuptools==41.0.1 \
-	wheel==0.33.4
-RUN pip3 install west==0.6.3
+RUN pip3 install --upgrade west
 
 RUN mkdir -p /usr/src/zephyrproject
 WORKDIR /usr/src/zephyrproject
-RUN west init --mr v2.2.0 && west update
+RUN west init --mr v2.3.0 && west update && west zephyr-export
 RUN pip3 install -r zephyr/scripts/requirements.txt
