@@ -30,7 +30,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		gperf \
 		lbzip2 \
 		libc6-dev \
-		libsdl-dev \
+		libsdl2-dev \
 		ninja-build \
 		make \
 		pkg-config \
@@ -51,16 +51,17 @@ RUN wget -q https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/c
   && ./cmake-$CMAKE_VERSION-Linux-x86_64.sh --skip-license --prefix=/usr/local \
   && rm -f ./cmake-$CMAKE_VERSION-Linux-x86_64.sh
 
-ENV ZEPHYR_ZSDK_VERSION 0.11.4
-RUN wget -nv https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v$ZEPHYR_ZSDK_VERSION/zephyr-sdk-$ZEPHYR_ZSDK_VERSION-setup.run \
-  && sh zephyr-sdk-$ZEPHYR_ZSDK_VERSION-setup.run -- -d /opt/zephyr-sdk \
-  && rm zephyr-sdk-$ZEPHYR_ZSDK_VERSION-setup.run
+ENV ZEPHYR_ZSDK_VERSION 0.12.1
+RUN wget -nv --show-progress --progress=bar:force:noscroll https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v$ZEPHYR_ZSDK_VERSION/zephyr-sdk-$ZEPHYR_ZSDK_VERSION-x86_64-linux-setup.run \
+  && sh zephyr-sdk-$ZEPHYR_ZSDK_VERSION-x86_64-linux-setup.run -- -d /opt/zephyr-sdk-$ZEPHYR_ZSDK_VERSION \
+  && rm zephyr-sdk-$ZEPHYR_ZSDK_VERSION-x86_64-linux-setup.run
 ENV ZEPHYR_TOOLCHAIN_VARIANT zephyr
-ENV ZEPHYR_SDK_INSTALL_DIR /opt/zephyr-sdk
+ENV ZEPHYR_SDK_INSTALL_DIR /opt/zephyr-sdk-$ZEPHYR_ZSDK_VERSION
 
 RUN pip3 install --upgrade west
 
-RUN mkdir -p /usr/src/zephyrproject
-WORKDIR /usr/src/zephyrproject
-RUN west init --mr v2.4.0 && west update && west zephyr-export
+ENV ZEPHYR_ZREPO_VERSION 2.5.0-rc1
+RUN mkdir -p /usr/src/zephyr-$ZEPHYR_ZREPO_VERSION
+WORKDIR /usr/src/zephyr-$ZEPHYR_ZREPO_VERSION
+RUN west init --mr v$ZEPHYR_ZREPO_VERSION && west update && west zephyr-export
 RUN pip3 install -r zephyr/scripts/requirements.txt
