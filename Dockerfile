@@ -58,9 +58,11 @@ RUN wget -nv --show-progress --progress=bar:force:noscroll https://github.com/ze
 ENV ZEPHYR_TOOLCHAIN_VARIANT zephyr
 ENV ZEPHYR_SDK_INSTALL_DIR /opt/zephyr-sdk-$ZEPHYR_ZSDK_VERSION
 
+RUN python3 -m pip install -U pip
+
 RUN pip3 install --upgrade west
 
-ENV ZEPHYR_ZREPO_VERSION 2.5.0-rc2
+ENV ZEPHYR_ZREPO_VERSION 2.5.0-rc3
 RUN mkdir -p /usr/src/zephyr-$ZEPHYR_ZREPO_VERSION
 WORKDIR /usr/src/zephyr-$ZEPHYR_ZREPO_VERSION
 RUN west init --mr v$ZEPHYR_ZREPO_VERSION && west update && west zephyr-export
