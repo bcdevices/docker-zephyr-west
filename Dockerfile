@@ -1,5 +1,10 @@
 FROM buildpack-deps:bionic-scm
 
+ARG CMAKE_VERSION=3.20.5
+ARG ZSDK_VERSION=0.13.1
+ARG ZEPHYR_ZREPO_VERSION=2.7.0-rc4
+ARG WGET_ARGS="-q --show-progress --progress=bar:force:noscroll --no-check-certificate"
+
 # Setup environment
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERM=xterm
@@ -45,25 +50,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		zip \
 	  && rm -rf /var/lib/apt/lists/*
 
-ENV CMAKE_VERSION 3.15.3
-RUN wget -q https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-$CMAKE_VERSION-Linux-x86_64.sh \
-  && chmod +x cmake-$CMAKE_VERSION-Linux-x86_64.sh \
-  && ./cmake-$CMAKE_VERSION-Linux-x86_64.sh --skip-license --prefix=/usr/local \
-  && rm -f ./cmake-$CMAKE_VERSION-Linux-x86_64.sh
+RUN wget ${WGET_ARGS} https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-${CMAKE_VERSION}-Linux-x86_64.sh \
+  && chmod +x cmake-${CMAKE_VERSION}-Linux-x86_64.sh \
+  && ./cmake-${CMAKE_VERSION}-Linux-x86_64.sh --skip-license --prefix=/usr/local \
+  && rm -f ./cmake-${CMAKE_VERSION}-Linux-x86_64.sh
 
-ENV ZEPHYR_ZSDK_VERSION 0.12.4
-RUN wget -nv --show-progress --progress=bar:force:noscroll https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v$ZEPHYR_ZSDK_VERSION/zephyr-sdk-$ZEPHYR_ZSDK_VERSION-x86_64-linux-setup.run \
-  && sh zephyr-sdk-$ZEPHYR_ZSDK_VERSION-x86_64-linux-setup.run -- -d /opt/zephyr-sdk-$ZEPHYR_ZSDK_VERSION \
-  && rm zephyr-sdk-$ZEPHYR_ZSDK_VERSION-x86_64-linux-setup.run
+RUN wget ${WGET_ARGS} https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/zephyr-sdk-${ZSDK_VERSION}-linux-x86_64-setup.run && \
+	sh "zephyr-sdk-${ZSDK_VERSION}-linux-x86_64-setup.run" --quiet -- -d /opt/toolchains/zephyr-sdk-${ZSDK_VERSION} && \
+	rm "zephyr-sdk-${ZSDK_VERSION}-linux-x86_64-setup.run"
+
 ENV ZEPHYR_TOOLCHAIN_VARIANT zephyr
-ENV ZEPHYR_SDK_INSTALL_DIR /opt/zephyr-sdk-$ZEPHYR_ZSDK_VERSION
+ENV ZEPHYR_SDK_INSTALL_DIR /opt/toolchains/zephyr-sdk-${ZEPHYR_ZSDK_VERSION}
 
 RUN python3 -m pip install -U pip
 
 RUN pip3 install --upgrade west
 
-ENV ZEPHYR_ZREPO_VERSION 2.6.0
-RUN mkdir -p /usr/src/zephyr-$ZEPHYR_ZREPO_VERSION
-WORKDIR /usr/src/zephyr-$ZEPHYR_ZREPO_VERSION
-RUN west init --mr v$ZEPHYR_ZREPO_VERSION && west update && west zephyr-export
+RUN mkdir -p /usr/src/zephyr-${ZEPHYR_ZREPO_VERSION}
+WORKDIR /usr/src/zephyr-${ZEPHYR_ZREPO_VERSION}
+RUN west init --mr v${ZEPHYR_ZREPO_VERSION} && west update && west zephyr-export
 RUN pip3 install -r zephyr/scripts/requirements.txt
