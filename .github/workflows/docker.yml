@@ -1,4 +1,4 @@
-name: Create and publish Docker image with Zephyr and FMN tools
+name: Create and publish Docker image with Zephyr
 
 on:
   push:
