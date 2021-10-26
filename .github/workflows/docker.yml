@@ -6,7 +6,7 @@ on:
       - 'v*.*.*'
   pull_request:
     branches:
-      - 'main'
+      - 'master'
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: 'bcdevices/zephyr' 
