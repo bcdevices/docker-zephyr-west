@@ -2,7 +2,7 @@ FROM buildpack-deps:bionic-scm
 
 ARG CMAKE_VERSION=3.20.5
 ARG ZSDK_VERSION=0.13.1
-ARG ZEPHYR_ZREPO_VERSION=2.7.0-rc4
+ARG ZEPHYR_ZREPO_VERSION=2.7.0
 ARG WGET_ARGS="-q --show-progress --progress=bar:force:noscroll --no-check-certificate"
 
 # Setup environment
