@@ -60,7 +60,7 @@ RUN wget ${WGET_ARGS} https://github.com/zephyrproject-rtos/sdk-ng/releases/down
 	rm "zephyr-sdk-${ZSDK_VERSION}-linux-x86_64-setup.run"
 
 ENV ZEPHYR_TOOLCHAIN_VARIANT zephyr
-ENV ZEPHYR_SDK_INSTALL_DIR /opt/toolchains/zephyr-sdk-${ZEPHYR_ZSDK_VERSION}
+ENV ZEPHYR_SDK_INSTALL_DIR /opt/toolchains/zephyr-sdk-${ZSDK_VERSION}
 
 RUN python3 -m pip install -U pip
 
