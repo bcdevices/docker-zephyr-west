@@ -1,4 +1,4 @@
-FROM buildpack-deps:focal-scm
+FROM --platform=linux/amd64 buildpack-deps:focal-scm
 
 ARG CMAKE_VERSION=3.20.5
 ARG ZSDK_VERSION=0.14.0-rc1
