@@ -1,9 +1,10 @@
-FROM buildpack-deps:bionic-scm
+FROM --platform=linux/amd64 buildpack-deps:focal-scm
 
 ARG CMAKE_VERSION=3.20.5
-ARG ZSDK_VERSION=0.13.2
+ARG ZSDK_VERSION=0.14.0
 ARG ZEPHYR_ZREPO_VERSION=3.0.0
 ARG WGET_ARGS="-q --show-progress --progress=bar:force:noscroll --no-check-certificate"
+ARG HOSTTYPE=x86_64
 
 # Setup environment
 ENV DEBIAN_FRONTEND noninteractive
@@ -50,14 +51,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		zip \
 	  && rm -rf /var/lib/apt/lists/*
 
-RUN wget ${WGET_ARGS} https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-${CMAKE_VERSION}-Linux-x86_64.sh \
-  && chmod +x cmake-${CMAKE_VERSION}-Linux-x86_64.sh \
-  && ./cmake-${CMAKE_VERSION}-Linux-x86_64.sh --skip-license --prefix=/usr/local \
-  && rm -f ./cmake-${CMAKE_VERSION}-Linux-x86_64.sh
+RUN wget ${WGET_ARGS} https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-${CMAKE_VERSION}-Linux-${HOSTTYPE}.sh \
+  && chmod +x cmake-${CMAKE_VERSION}-Linux-${HOSTTYPE}.sh \
+  && ./cmake-${CMAKE_VERSION}-Linux-${HOSTTYPE}.sh --skip-license --prefix=/usr/local \
+  && rm -f ./cmake-${CMAKE_VERSION}-Linux-${HOST_TYPE}.sh
 
-RUN wget ${WGET_ARGS} https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/zephyr-sdk-${ZSDK_VERSION}-linux-x86_64-setup.run && \
-	sh "zephyr-sdk-${ZSDK_VERSION}-linux-x86_64-setup.run" --quiet -- -d /opt/toolchains/zephyr-sdk-${ZSDK_VERSION} && \
-	rm "zephyr-sdk-${ZSDK_VERSION}-linux-x86_64-setup.run"
+RUN mkdir /opt/toolchains && cd /opt/toolchains && \
+	wget ${WGET_ARGS} https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}.tar.gz && \
+	tar xf zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}.tar.gz && \
+	zephyr-sdk-${ZSDK_VERSION}/setup.sh -c -t && \
+	rm zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}.tar.gz
 
 ENV ZEPHYR_TOOLCHAIN_VARIANT zephyr
 ENV ZEPHYR_SDK_INSTALL_DIR /opt/toolchains/zephyr-sdk-${ZSDK_VERSION}
