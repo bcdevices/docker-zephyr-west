@@ -1,8 +1,8 @@
 FROM --platform=linux/amd64 buildpack-deps:focal-scm
 
 ARG CMAKE_VERSION=3.20.5
-ARG ZSDK_VERSION=0.14.0
-ARG ZEPHYR_ZREPO_VERSION=3.0.0
+ARG ZSDK_VERSION=0.14.2
+ARG ZEPHYR_ZREPO_VERSION=3.1.0-rc1
 ARG WGET_ARGS="-q --show-progress --progress=bar:force:noscroll --no-check-certificate"
 ARG HOSTTYPE=x86_64
 
@@ -59,7 +59,7 @@ RUN wget ${WGET_ARGS} https://github.com/Kitware/CMake/releases/download/v$CMAKE
 RUN mkdir /opt/toolchains && cd /opt/toolchains && \
 	wget ${WGET_ARGS} https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}.tar.gz && \
 	tar xf zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}.tar.gz && \
-	zephyr-sdk-${ZSDK_VERSION}/setup.sh -c -t && \
+	zephyr-sdk-${ZSDK_VERSION}/setup.sh -c -t arm-zephyr-eabi && \
 	rm zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}.tar.gz
 
 ENV ZEPHYR_TOOLCHAIN_VARIANT zephyr
