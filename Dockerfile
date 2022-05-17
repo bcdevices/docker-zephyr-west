@@ -59,7 +59,7 @@ RUN wget ${WGET_ARGS} https://github.com/Kitware/CMake/releases/download/v$CMAKE
 RUN mkdir /opt/toolchains && cd /opt/toolchains && \
 	wget ${WGET_ARGS} https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}.tar.gz && \
 	tar xf zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}.tar.gz && \
-	zephyr-sdk-${ZSDK_VERSION}/setup.sh -c -t && \
+	zephyr-sdk-${ZSDK_VERSION}/setup.sh -c -t arm-zephyr-eabi && \
 	rm zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}.tar.gz
 
 ENV ZEPHYR_TOOLCHAIN_VARIANT zephyr
