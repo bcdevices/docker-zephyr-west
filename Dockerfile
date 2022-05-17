@@ -1,8 +1,8 @@
 FROM --platform=linux/amd64 buildpack-deps:focal-scm
 
 ARG CMAKE_VERSION=3.20.5
-ARG ZSDK_VERSION=0.14.0
-ARG ZEPHYR_ZREPO_VERSION=3.0.0
+ARG ZSDK_VERSION=0.14.2
+ARG ZEPHYR_ZREPO_VERSION=3.1.0-rc1
 ARG WGET_ARGS="-q --show-progress --progress=bar:force:noscroll --no-check-certificate"
 ARG HOSTTYPE=x86_64
 
