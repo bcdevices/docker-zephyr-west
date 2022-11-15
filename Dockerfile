@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 buildpack-deps:focal-scm
+FROM --platform=linux/amd64 buildpack-deps:jammy-scm
 
 ARG CMAKE_VERSION=3.20.5
 ARG ZSDK_VERSION=0.15.1
@@ -25,6 +25,7 @@ ENV LANG=C.UTF-8
 # Install needed packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
 		ccache \
+		clang-format \
 		device-tree-compiler \
 		dfu-util \
 		file \
