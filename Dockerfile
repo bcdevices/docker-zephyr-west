@@ -46,6 +46,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		python3-setuptools \
 		python3-tk \
 		python3-wheel \
+		srecord \
 		qemu \
 		unzip \
 		wget \
