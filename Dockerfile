@@ -6,7 +6,7 @@ ARG ZEPHYR_ZREPO_VERSION="3.3.0"
 ARG WGET_ARGS="-q --progress=dot:giga --no-check-certificate"
 
 # Container host platform, set automatically by `docker build`
-ARG TARGETPLATFORM
+ARG TARGETPLATFORM="linux/amd64"
 
 # Setup environment
 ENV DEBIAN_FRONTEND="noninteractive"
