@@ -26,7 +26,8 @@ ENV LANG="C.UTF-8"
 
 # Install needed packages
 # hadolint ignore=DL3008
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends \
 		ccache \
 		clang-format \
 		device-tree-compiler \
@@ -34,8 +35,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		file \
 		g++ \
 		gcc \
-		gcc-multilib \
-		g++-multilib \
 		git \
 		gperf \
 		lbzip2 \
@@ -55,7 +54,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		wget \
 		xz-utils \
 		zip \
-	  && rm -rf /var/lib/apt/lists/*
+	&& arch="$(dpkg --print-architecture)" \
+	&& if [ "${arch}" == "amd64" ]; then \
+		apt-get install -y --no-install-recommends \
+			gcc-multilib \
+			g++-multilib; \
+		fi \
+	&& rm -rf /var/lib/apt/lists/*
+
 
 #
 # Install CMake
