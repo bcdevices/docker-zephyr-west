@@ -4,8 +4,7 @@ FROM buildpack-deps:jammy-scm
 ARG CMAKE_VERSION="3.20.5"
 ARG ZSDK_VERSION="0.15.2"
 ARG ZEPHYR_ZREPO_VERSION="3.3.0"
-#ARG WGET_ARGS="-q --show-progress --progress=bar:force:noscroll --no-check-certificate"
-ARG WGET_ARGS="--show-progress --progress=bar:force:noscroll --no-check-certificate"
+ARG WGET_ARGS="-q --show-progress --progress=bar:force:noscroll --no-check-certificate"
 
 ARG PKGS
 ARG PKGS_amd64
