@@ -55,7 +55,7 @@ RUN apt-get update \
 		xz-utils \
 		zip \
 	&& arch="$(dpkg --print-architecture)" \
-	&& if [ "${arch}" == "amd64" ]; then \
+	&& if [ "${arch}" = "amd64" ]; then \
 		apt-get install -y --no-install-recommends \
 			gcc-multilib \
 			g++-multilib; \
@@ -67,7 +67,7 @@ RUN apt-get update \
 # Install CMake
 #
 
-# hadolint ignore=DL3047,DL3066
+# hadolint ignore=DL3047
 RUN case "$(dpkg --print-architecture)" in arm64) arch="aarch64";; amd64) arch="x86_64";; esac \
 	&& CMAKE_INSTALLER="cmake-${CMAKE_VERSION}-Linux-${arch}.sh" \
 	&& CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/${CMAKE_INSTALLER}" \
@@ -83,7 +83,7 @@ WORKDIR "/opt/toolchains"
 # Install Zephyr SDK
 #
 
-# hadolint ignore=DL3047,DL3066
+# hadolint ignore=DL3047
 RUN case "$(dpkg --print-architecture)" in arm64) arch="aarch64";; amd64) arch="x86_64";; esac \
 	&& ZEPHYR_SDK_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/zephyr-sdk-${ZSDK_VERSION}_linux-${arch}.tar.gz" \
 	&& wget ${WGET_ARGS} "${ZEPHYR_SDK_URL}" \
