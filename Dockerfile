@@ -1,3 +1,4 @@
+# bcdevices/zsdk-zephyr-jammy
 FROM buildpack-deps:jammy-scm
 
 ARG CMAKE_VERSION="3.20.5"
@@ -5,11 +6,11 @@ ARG ZSDK_VERSION="0.15.2"
 ARG ZEPHYR_ZREPO_VERSION="3.3.0"
 ARG WGET_ARGS="-q --show-progress --progress=bar:force:noscroll --no-check-certificate"
 
-# Setup environment
+# :: Setup environment
 ENV DEBIAN_FRONTEND="noninteractive"
 ENV TERM="xterm"
 
-# Setup locale
+# :: Setup locale
 # hadolint ignore=DL3008
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends \
@@ -24,7 +25,7 @@ ENV LANGUAGE="en_US:en"
 ENV LC_ALL="en_US.UTF-8"
 ENV LANG="C.UTF-8"
 
-# Install needed packages
+# :: Install needed packages
 # hadolint ignore=DL3008
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends \
@@ -62,11 +63,7 @@ RUN apt-get update \
 		fi \
 	&& rm -rf /var/lib/apt/lists/*
 
-
-#
-# Install CMake
-#
-
+# :: Install CMake
 # hadolint ignore=DL3047
 RUN case "$(dpkg --print-architecture)" in arm64) arch="aarch64";; amd64) arch="x86_64";; esac \
 	&& CMAKE_INSTALLER="cmake-${CMAKE_VERSION}-Linux-${arch}.sh" \
@@ -76,13 +73,9 @@ RUN case "$(dpkg --print-architecture)" in arm64) arch="aarch64";; amd64) arch="
 	&& "./${CMAKE_INSTALLER}" --skip-license --prefix="/usr/local" \
 	&& rm -f "./${CMAKE_INSTALLER}" \
 	&& mkdir "/opt/toolchains"
-
 WORKDIR "/opt/toolchains"
 
-#
-# Install Zephyr SDK
-#
-
+# :: Install Zephyr SDK
 # hadolint ignore=DL3047
 RUN case "$(dpkg --print-architecture)" in arm64) arch="aarch64";; amd64) arch="x86_64";; esac \
 	&& ZEPHYR_SDK_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/zephyr-sdk-${ZSDK_VERSION}_linux-${arch}.tar.gz" \
@@ -94,17 +87,12 @@ RUN case "$(dpkg --print-architecture)" in arm64) arch="aarch64";; amd64) arch="
 ENV ZEPHYR_TOOLCHAIN_VARIANT="zephyr"
 ENV ZEPHYR_SDK_INSTALL_DIR="/opt/toolchains/zephyr-sdk-${ZSDK_VERSION}"
 
-#
-# Install Zephyr
-#
-
+# :: Install Zephyr
 # hadolint ignore=DL3013,DL3042
 RUN python3 -m pip install -U pip \
 	&& pip3 install --upgrade west \
 	&& mkdir -p "/usr/src/zephyr-${ZEPHYR_ZREPO_VERSION}"
-
 WORKDIR "/usr/src/zephyr-${ZEPHYR_ZREPO_VERSION}"
-
 # hadolint ignore=DL3042
 RUN west init --mr "v${ZEPHYR_ZREPO_VERSION}" \
 	&& west update \
