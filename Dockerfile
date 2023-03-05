@@ -3,10 +3,7 @@ FROM buildpack-deps:jammy-scm
 ARG CMAKE_VERSION="3.20.5"
 ARG ZSDK_VERSION="0.15.2"
 ARG ZEPHYR_ZREPO_VERSION="3.3.0"
-ARG WGET_ARGS="-q --progress=dot:giga --no-check-certificate"
-
-# Container host platform, set automatically by `docker build`
-ARG TARGETPLATFORM="linux/amd64"
+ARG WGET_ARGS="-q --show-progress --progress=bar:force:noscroll --no-check-certificate"
 
 # Setup environment
 ENV DEBIAN_FRONTEND="noninteractive"
@@ -37,6 +34,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		file \
 		g++ \
 		gcc \
+		gcc-multilib \
+		g++-multilib \
 		git \
 		gperf \
 		lbzip2 \
@@ -63,12 +62,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 #
 
 # hadolint ignore=DL3047,DL3066
-RUN case "${TARGETPLATFORM}" in linux/arm64) HOSTTYPE="aarch64";; linux/amd64|*) HOSTTYPE="x86-64";; esac \
-	&& CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-${CMAKE_VERSION}-Linux-${HOSTTYPE}.sh" \
+RUN case "$(dpkg --print-architecture)" in arm64) arch="aarch64";; amd64) arch="x86_64";; esac \
+	&& CMAKE_INSTALLER="cmake-${CMAKE_VERSION}-Linux-${arch}.sh" \
+	&& CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/${CMAKE_INSTALLER}" \
 	&& wget ${WGET_ARGS} "${CMAKE_URL}" \
-	&& chmod +x "cmake-${CMAKE_VERSION}-Linux-${HOSTTYPE}.sh" \
-	&& "./cmake-${CMAKE_VERSION}-Linux-${HOSTTYPE}.sh" --skip-license --prefix="/usr/local" \
-	&& rm -f "./cmake-${CMAKE_VERSION}-Linux-${HOSTTYPE}.sh" \
+	&& chmod +x "${CMAKE_INSTALLER}" \
+	&& "./${CMAKE_INSTALLER}" --skip-license --prefix="/usr/local" \
+	&& rm -f "./${CMAKE_INSTALLER}" \
 	&& mkdir "/opt/toolchains"
 
 WORKDIR "/opt/toolchains"
@@ -78,12 +78,12 @@ WORKDIR "/opt/toolchains"
 #
 
 # hadolint ignore=DL3047,DL3066
-RUN case "${TARGETPLATFORM}" in linux/arm64) HOSTTYPE="aarch64";; linux/amd64|*) HOSTTYPE="x86-64";; esac \
-	&& ZEPHYR_SDK_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}.tar.gz" \
+RUN case "$(dpkg --print-architecture)" in arm64) arch="aarch64";; amd64) arch="x86_64";; esac \
+	&& ZEPHYR_SDK_URL="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/zephyr-sdk-${ZSDK_VERSION}_linux-${arch}.tar.gz" \
 	&& wget ${WGET_ARGS} "${ZEPHYR_SDK_URL}" \
-	&& tar xf "zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}.tar.gz" \
+	&& tar xf "zephyr-sdk-${ZSDK_VERSION}_linux-${arch}.tar.gz" \
 	&& "zephyr-sdk-${ZSDK_VERSION}/setup.sh" -c -t "arm-zephyr-eabi" \
-	&& rm -f "zephyr-sdk-${ZSDK_VERSION}_linux-${HOSTTYPE}.tar.gz"
+	&& rm -f "zephyr-sdk-${ZSDK_VERSION}_linux-${arch}.tar.gz"
 
 ENV ZEPHYR_TOOLCHAIN_VARIANT="zephyr"
 ENV ZEPHYR_SDK_INSTALL_DIR="/opt/toolchains/zephyr-sdk-${ZSDK_VERSION}"
