@@ -48,6 +48,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		python3-wheel \
 		srecord \
 		qemu \
+		qemu-system \
 		unzip \
 		wget \
 		xz-utils \
