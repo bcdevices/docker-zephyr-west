@@ -95,7 +95,7 @@ RUN zsdk_tgz="zephyr-sdk-${ZSDK_VERSION}_linux-$(uname -m).tar.gz" \
 	&& "./zephyr-sdk-${ZSDK_VERSION}/setup.sh" -c -t arm-zephyr-eabi
 
 ENV ZEPHYR_TOOLCHAIN_VARIANT="zephyr"
-ENV ZEPHYR_SDK_INSTALL_DIR="${ZSDK_OPT_DIR}/zephyr-sdk-${ZSDK_VERSION}"
+ENV ZEPHYR_SDK_INSTALL_DIR="${ZSDK_ROOT_DIR}/zephyr-sdk-${ZSDK_VERSION}"
 
 # DL3013: `pip install <package>==<version>`
 # DL3042: `pip install --no-cache-dir <package>`
