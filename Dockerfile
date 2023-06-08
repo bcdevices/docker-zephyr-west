@@ -87,11 +87,11 @@ RUN cmake_install="cmake-${CMAKE_VERSION}-Linux-$(uname -m).sh" \
 
 WORKDIR "${ZSDK_ROOT_DIR}"
 
-RUN zsdk_tgz="zephyr-sdk-${ZSDK_VERSION}_linux-$(uname -m).tar.gz" \
- 	&& url="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/${zsdk_tgz}" \
-	&& wget -O zsdk.tgz "${url}" --progress=dot:giga ${WGET_ARGS} \
-	&& tar xf zsdk.tgz \
-	&& rm -f zsdk.tgz \
+RUN zsdk_txz="zephyr-sdk-${ZSDK_VERSION}_linux-$(uname -m).tar.xz" \
+ 	&& url="https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v${ZSDK_VERSION}/${zsdk_txz}" \
+	&& wget -O zsdk.txz "${url}" --progress=dot:giga ${WGET_ARGS} \
+	&& tar xf zsdk.txz \
+	&& rm -f zsdk.txz \
 	&& "./zephyr-sdk-${ZSDK_VERSION}/setup.sh" -c -t arm-zephyr-eabi
 
 ENV ZEPHYR_TOOLCHAIN_VARIANT="zephyr"
