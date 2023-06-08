@@ -8,8 +8,8 @@
 FROM buildpack-deps:jammy-scm
 
 ARG CMAKE_VERSION="3.20.5"
-ARG ZSDK_VERSION="0.15.2"
-ARG ZEPHYR_VERSION="3.3.0"
+ARG ZSDK_VERSION="0.16.1"
+ARG ZEPHYR_VERSION="3.4.0-rc2"
 
 ARG CMAKE_ROOT_DIR="/usr/local"
 ARG ZSDK_ROOT_DIR="/opt/toolchains"
