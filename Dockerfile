@@ -7,8 +7,8 @@
 # bcdevices/zsdk-zephyr-jammy
 FROM buildpack-deps:jammy-scm
 
-ARG ZSDK_VERSION="0.16.1"
-ARG ZEPHYR_VERSION="3.4.0"
+ARG ZSDK_VERSION="0.16.3"
+ARG ZEPHYR_VERSION="3.5.0-rc2"
 
 ARG ZSDK_ROOT_DIR="/opt/toolchains"
 ARG ZEPHYR_SRC_DIR="/usr/src"
