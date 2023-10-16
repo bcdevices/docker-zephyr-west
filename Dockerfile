@@ -8,7 +8,7 @@
 FROM buildpack-deps:jammy-scm
 
 ARG ZSDK_VERSION="0.16.3"
-ARG ZEPHYR_VERSION="3.5.0-rc2"
+ARG ZEPHYR_VERSION="3.5.0-rc3"
 
 ARG ZSDK_ROOT_DIR="/opt/toolchains"
 ARG ZEPHYR_SRC_DIR="/usr/src"
