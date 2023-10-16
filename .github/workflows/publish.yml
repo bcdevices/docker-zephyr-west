@@ -16,7 +16,8 @@ jobs:
   build:
 
     name: build-and-push-image
-    runs-on: ubuntu-latest
+    runs-on:
+      group: zephyr-builds
     permissions:
       contents: read
       packages: write
