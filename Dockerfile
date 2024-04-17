@@ -7,8 +7,8 @@
 # bcdevices/zsdk-zephyr-jammy
 FROM buildpack-deps:jammy-scm
 
-ARG ZSDK_VERSION="0.16.3"
-ARG ZEPHYR_VERSION="3.5.0"
+ARG ZSDK_VERSION="0.16.5"
+ARG ZEPHYR_VERSION="3.6.0"
 
 ARG ZSDK_ROOT_DIR="/opt/toolchains"
 ARG ZEPHYR_SRC_DIR="/usr/src"
@@ -28,6 +28,7 @@ ENV PKGS="${PKGS} gnupg"
 ENV PKGS="${PKGS} gperf"
 ENV PKGS="${PKGS} lbzip2"
 ENV PKGS="${PKGS} libc6-dev"
+ENV PKGS="${PKGS} libmagic1"
 ENV PKGS="${PKGS} libsdl2-dev"
 ENV PKGS="${PKGS} lsb-release"
 ENV PKGS="${PKGS} ninja-build"
