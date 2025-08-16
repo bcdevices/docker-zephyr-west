@@ -7,12 +7,13 @@
 # bcdevices/zsdk-zephyr-jammy
 FROM buildpack-deps:jammy-scm
 
-ARG ZSDK_VERSION="0.17.0"
-ARG ZEPHYR_VERSION="3.7.0"
+ARG ZSDK_VERSION="0.17.3"
+ARG ZEPHYR_VERSION="4.2.0"
 
 ARG ZSDK_ROOT_DIR="/opt/toolchains"
 ARG ZEPHYR_SRC_DIR="/usr/src"
 ARG ZEPHYR_INSTALL_DIR="${ZEPHYR_SRC_DIR}/zephyr-${ZEPHYR_VERSION}"
+ARG TOOLCHAINS="arm-zephyr-eabi"
 
 ARG PKGS
 ENV PKGS="${PKGS} ccache"
@@ -41,6 +42,11 @@ ENV PKGS="${PKGS} python3-pip"
 ENV PKGS="${PKGS} python3-setuptools"
 ENV PKGS="${PKGS} python3-tk"
 ENV PKGS="${PKGS} python3-wheel"
+ENV PKGS="${PKGS} python3-venv"
+ENV PKGS="${PKGS} libusb-1.0-0"
+ENV PKGS="${PKGS} libglib2.0-dev"
+ENV PKGS="${PKGS} usbutils"
+ENV PKGS="${PKGS} rsync"
 ENV PKGS="${PKGS} software-properties-common"
 ENV PKGS="${PKGS} srecord"
 ENV PKGS="${PKGS} qemu"
@@ -90,7 +96,7 @@ RUN zsdk_txz="zephyr-sdk-${ZSDK_VERSION}_linux-$(uname -m).tar.xz" \
 	&& wget -O zsdk.txz "${url}" --progress=dot:giga ${WGET_ARGS} \
 	&& tar xf zsdk.txz \
 	&& rm -f zsdk.txz \
-	&& "./zephyr-sdk-${ZSDK_VERSION}/setup.sh" -c -t arm-zephyr-eabi
+        && "./zephyr-sdk-${ZSDK_VERSION}/setup.sh" -c -h -t ${TOOLCHAINS}
 
 ENV ZEPHYR_TOOLCHAIN_VARIANT="zephyr"
 ENV ZEPHYR_SDK_INSTALL_DIR="${ZSDK_ROOT_DIR}/zephyr-sdk-${ZSDK_VERSION}"
@@ -99,7 +105,7 @@ ENV ZEPHYR_SDK_INSTALL_DIR="${ZSDK_ROOT_DIR}/zephyr-sdk-${ZSDK_VERSION}"
 # DL3042: `pip install --no-cache-dir <package>`
 # hadolint ignore=DL3013,DL3042
 RUN python3 -m pip install -U pip \
-	&& pip3 install --upgrade west
+	&& pip3 install --break-system-packages --upgrade west
 
 WORKDIR "${ZEPHYR_INSTALL_DIR}"
 
@@ -108,4 +114,15 @@ WORKDIR "${ZEPHYR_INSTALL_DIR}"
 RUN west init --mr "v${ZEPHYR_VERSION}" \
 	&& west update \
 	&& west zephyr-export \
-	&& pip3 install -r zephyr/scripts/requirements.txt
+        && pip3 install --break-system-packages -r zephyr/scripts/requirements.txt
+
+ENV CCACHE_DIR="/.ccache" \
+    CCACHE_MAXSIZE="5G" \
+    CCACHE_COMPRESS="1" \
+    XDG_CACHE_HOME="/root/.cache" \
+    PIP_CACHE_DIR="/root/.cache/pip"
+
+RUN mkdir -p "${CCACHE_DIR}" "${PIP_CACHE_DIR}" \
+ && chmod -R 777 "${CCACHE_DIR}"
+
+RUN git config --system --add safe.directory '*'
